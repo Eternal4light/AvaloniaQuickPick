@@ -1,0 +1,81 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AvaloniaQuickPick.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="AvaloniaQuickPick.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="AvaloniaQuickPick">
+
+	<Window.Styles>
+		<Style Selector="Button.Square">
+			<Setter Property="Width" Value="60" />
+			<Setter Property="Height" Value="60" />
+			<Setter Property="Margin" Value="5" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Button">
+						<Border CornerRadius="5" Background="{Binding Path=ColorString}"
+								PointerPressed="ScrollViewerPointerPressed"
+							    PointerReleased="ScrollViewerPointerReleased"
+							    PointerMoved="ScrollViewerPointerMoved">
+							
+							<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+										      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+	</Window.Styles>
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+	<Grid>
+
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition/>
+			<ColumnDefinition Width="1.2*"/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+
+		<Grid.RowDefinitions>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+
+		<StackPanel Grid.Row="1" Grid.Column="1">
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+				<Button Command="{Binding AddSquare}"  MinHeight="20" MinWidth="20" Margin="2" >+</Button>
+				<Button Command="{Binding RemoveSquare}"  MinHeight="20" MinWidth="20" Margin="2" >-</Button>
+			</StackPanel>
+			<StackPanel>
+				<ScrollViewer x:Name="MainScrollViewer" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility ="Disabled"
+							  PointerPressed="ScrollViewerPointerPressed"
+							  PointerReleased="ScrollViewerPointerReleased"
+							  PointerMoved="ScrollViewerPointerMoved">
+					
+					<ItemsControl Items="{Binding Squares}">
+						<ItemsControl.ItemsPanel>
+							<ItemsPanelTemplate>
+								<ReversibleStackPanel Orientation="Horizontal" ReverseOrder="True"/>
+							</ItemsPanelTemplate>
+						</ItemsControl.ItemsPanel>
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<Button Classes="Square" CommandParameter="{Binding  Path=Id}"
+										Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}},
+										Path=DataContext.ChangeColor}"/>
+
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</ScrollViewer>
+			</StackPanel>
+		</StackPanel>
+	</Grid>
+</Window>
