@@ -46,8 +46,7 @@ namespace AvaloniaQuickPick.ViewModels
             var color = Square.GetRandomColor();
             var index = Squares.IndexOf(Squares.First(s => s.Id == (Guid)parameter));
 
-           // To create a new instance is safer
-           Squares[index] = new Square(color);
+            Squares[index].Color = color;
         }
     }
 }

@@ -5,12 +5,11 @@ using System.Runtime.CompilerServices;
 
 namespace AvaloniaQuickPick.Models
 {
-    public class Square
+    internal class Square : INotifyPropertyChanged
     {
-
-        public Guid Id { get; set; }
-        public Color Color { get; set; }
-        public string ColorString => $"#{ValidateNumber(Color.R)}{ValidateNumber(Color.G)}{ValidateNumber(Color.B)}";
+        private Guid id;
+        private Color color;
+        private string colorString;
 
         private string ValidateNumber(int number)
         {
@@ -24,6 +23,9 @@ namespace AvaloniaQuickPick.Models
 
             return res;
         }
+
+        private string SetColorString() => $"#{ValidateNumber(Color.R)}{ValidateNumber(Color.G)}{ValidateNumber(Color.B)}";
+
         internal static Color GetRandomColor()
         {
             Random rnd = new Random();
@@ -38,9 +40,50 @@ namespace AvaloniaQuickPick.Models
 
         internal Square(Color color)
         {
-            Id = Guid.NewGuid();
-            this.Color = color;
+            id = Guid.NewGuid();
+            this.color = color;
         }
-       
+        public string ColorString
+        {
+            get
+            {
+                colorString = SetColorString();
+                return colorString;
+            }
+            set
+            {
+                colorString = value;
+                OnPropertyChanged("ColorString");
+            }
+        }
+        public Guid Id
+        {
+            get { return id; }
+            set
+            {
+                id = value;
+                OnPropertyChanged("Id");
+            }
+        }
+
+        public Color Color
+        {
+            get { return color; }
+            set
+            {
+                color = value;
+                ColorString = SetColorString();
+
+                OnPropertyChanged("Color");
+                OnPropertyChanged("ColorString");
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName] string prop = "")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
     }
 }
